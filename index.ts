@@ -1,10 +1,14 @@
-import express from "express";
+import express, { Application } from "express";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
+// import { router as userRouter } from "./routes/user";
+import { router as authRoute } from "./routes/auth";
+import { router as userRoute } from "./routes/user";
+import cors from "cors";
 
 dotenv.config();
 
-const app = express();
+const app: Application = express();
 const mongoUrl: string | undefined = process.env.MONGO_URL;
 
 if (!mongoUrl) {
@@ -21,6 +25,14 @@ mongoose
 // app.get("/api/test", () => {
 //     console.log("Test is successful");
 // });
+
+// app.use(express.json()); // for incoming JSON request
+
+app.use(cors());
+app.use(express.json());
+app.use("/api/auth", authRoute);
+// app.use("/api/login", authRoute); // DELETE, LOGIN IS WITHIN AUTH
+app.use("/api/users", userRoute);
 
 app.listen(process.env.PORT || 6000, () => {
     console.log("Backend server is running!");
