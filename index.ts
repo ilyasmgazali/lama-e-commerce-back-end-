@@ -4,6 +4,9 @@ import dotenv from "dotenv";
 // import { router as userRouter } from "./routes/user";
 import { router as authRoute } from "./routes/auth";
 import { router as userRoute } from "./routes/user";
+import { router as productRoute } from "./routes/product";
+import { router as cartRoute } from "./routes/cart";
+import { router as orderRoute } from "./routes/order";
 import cors from "cors";
 
 dotenv.config();
@@ -19,7 +22,7 @@ if (!mongoUrl) {
 mongoose
     .connect(mongoUrl)
     .then(() => console.log("DBConnection Successful!"))
-    .catch((error) => console.log(error));
+    .catch((err) => console.log(err));
 
 // Test is successful :)
 // app.get("/api/test", () => {
@@ -33,6 +36,9 @@ app.use(express.json());
 app.use("/api/auth", authRoute);
 // app.use("/api/login", authRoute); // DELETE, LOGIN IS WITHIN AUTH
 app.use("/api/users", userRoute);
+app.use("/api/products", productRoute);
+app.use("/api/carts", cartRoute);
+app.use("/api/orders", orderRoute);
 
 app.listen(process.env.PORT || 6000, () => {
     console.log("Backend server is running!");

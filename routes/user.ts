@@ -7,6 +7,7 @@ import express, { Router } from "express";
 import { Request, Response } from "express";
 import userModel, { IUser } from "../models/User";
 import dotenv from "dotenv";
+import UserModel from "../models/User";
 dotenv.config();
 
 const router: Router = express.Router();
@@ -37,8 +38,8 @@ router.put("/:id", verifyTokenAndAuthorization, async (req, res) => {
             { new: true } // return updated user
         );
         res.status(200).json(updatedUser);
-    } catch (error) {
-        res.status(500).json(error);
+    } catch (err) {
+        res.status(500).json(err);
     }
 });
 
@@ -66,12 +67,15 @@ router.delete(
                 userdID
             );
 
+            // refactor
+            // remove password, if you want to send back user data
+
             res.status(200).json({
                 message: "Successfuly deleted user",
                 findUser,
             }); //error.message;
-        } catch (error) {
-            res.status(500).json(error);
+        } catch (err) {
+            res.status(500).json(err);
         }
     }
 );
@@ -100,8 +104,8 @@ router.get("/find/:id", verifyTokenAndAdmin, async (req: any, res: any) => {
             message: "Successfuly returned user",
             others,
         }); //error.message;
-    } catch (error) {
-        res.status(500).json({ message: "error", error });
+    } catch (err) {
+        res.status(500).json({ message: "error", err });
     }
 });
 
@@ -140,12 +144,36 @@ router.get("/", verifyTokenAndAdmin, async (req: any, res: any) => {
             message: "Successfuly returned user",
             usersWithoutExposedPassword,
         }); //error.message;
-    } catch (error) {
-        res.status(500).json(error);
+    } catch (err) {
+        res.status(500).json(err);
     }
 });
 
-// // // GET USER STATS
-// // router.get("/stats", verifyTokenAndAdmin, UserController.getUserStats);
+// GET USER STATS //CONVERT INTO TYPESCRIPT
+// TOTAL NUMBER OF USERS CREATED STATISTICS PER MONTH
+router.get("/stats", verifyTokenAndAdmin, async (req: any, res: any) => {
+    const date: Date = new Date();
+    const lastYear: Date = new Date(date.setFullYear(date.getFullYear() - 1));
+
+    try {
+        const userData: IUser[] | null = await userModel.aggregate([
+            { $match: { createdAt: { $gte: lastYear } } },
+            {
+                $project: {
+                    month: { $month: "$createdAt" },
+                },
+            },
+            {
+                $group: {
+                    _id: "$month",
+                    total: { $sum: 1 },
+                },
+            },
+        ]);
+        res.status(200).json(userData);
+    } catch (err) {
+        res.status(500).json({ message: "error", err });
+    }
+});
 
 export { router };

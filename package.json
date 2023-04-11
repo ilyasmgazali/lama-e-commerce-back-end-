@@ -26,12 +26,14 @@
     "dependencies": {
         "@types/crypto-js": "^4.1.1",
         "@types/jsonwebtoken": "^9.0.1",
+        "@types/stripe": "^8.0.417",
         "cors": "^2.8.5",
         "crypto-js": "^4.1.1",
         "dotenv": "^16.0.3",
         "express": "^4.18.2",
         "jsonwebtoken": "^9.0.0",
         "mongoose": "^7.0.3",
-        "nodemon": "^2.0.22"
+        "nodemon": "^2.0.22",
+        "stripe": "^12.0.0"
     }
 }

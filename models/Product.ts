@@ -1,6 +1,18 @@
-import mongoose from "mongoose";
+import mongoose, { Document, Model, Schema } from "mongoose";
 
-const ProductSchema = new mongoose.Schema(
+export interface IProduct extends Document {
+    title: string;
+    desc: string;
+    img: string;
+    categories?: string[]; // maybe remove ? if error
+    size?: string;
+    color?: string;
+    price: number;
+    createdAt: Date;
+    updatedAt: Date;
+}
+
+const ProductSchema: Schema = new mongoose.Schema(
     {
         title: { type: String, required: true, unique: true },
         desc: { type: String, required: true },
@@ -13,5 +25,11 @@ const ProductSchema = new mongoose.Schema(
     { timestamps: true }
 );
 
-const productModel = mongoose.model("Product, ProductSchema");
-export { productModel };
+//const productModel = mongoose.model("Product, ProductSchema"); // this has been refactored, can delete
+
+const ProductModel: Model<IProduct> = mongoose.model<IProduct>(
+    "Product",
+    ProductSchema
+); //maybe with string???
+
+export default ProductModel;
