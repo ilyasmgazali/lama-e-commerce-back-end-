@@ -8,6 +8,7 @@ import { Request, Response } from "express";
 import userModel, { IUser } from "../models/User";
 import dotenv from "dotenv";
 import UserModel from "../models/User";
+import * as CryptoJS from "crypto-js";
 dotenv.config();
 
 const router: Router = express.Router();

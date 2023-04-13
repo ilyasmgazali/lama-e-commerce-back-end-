@@ -101,10 +101,7 @@ router.get("/find/:id", async (req: any, res: any) => {
         //    const { password: string, ...others } = findUser.toObject(); //instead of ._doc
         //}
 
-        res.status(200).json({
-            message: "Successfuly returned user",
-            others,
-        }); //error.message;
+        res.status(200).json(others); //error.message;
     } catch (err) {
         res.status(500).json({ message: "error", err });
     }
@@ -143,10 +140,7 @@ router.get("/", async (req: any, res: any) => {
             return res.status(401).json("There are no users in the system");
         }
 
-        res.status(200).json({
-            message: "Successfuly returned product/s",
-            findProducts,
-        }); //error.message;
+        res.status(200).json(findProducts); //error.message;
     } catch (err) {
         res.status(500).json(err);
     }
